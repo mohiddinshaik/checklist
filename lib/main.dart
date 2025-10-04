@@ -10,7 +10,7 @@ class ChecklistApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Checklist',
+      title: 'Check list',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
@@ -60,7 +60,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 ),
               ),
               child: const Text(
-                'Checklist',
+                'Check list',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
