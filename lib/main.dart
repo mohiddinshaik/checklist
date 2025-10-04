@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() {
   runApp(const ChecklistApp());
@@ -31,15 +33,28 @@ class ChecklistScreen extends StatefulWidget {
 class _ChecklistScreenState extends State<ChecklistScreen> {
   // List of checklist items with their completion status
   List<Map<String, dynamic>> checklistItems = [
-    {'title': 'Grocery Shopping', 'isCompleted': false},
-    {'title': 'Pay Bills', 'isCompleted': false},
-    {'title': 'Book Appointment', 'isCompleted': false},
-    {'title': 'Call Family', 'isCompleted': false},
-    {'title': 'Exercise', 'isCompleted': false},
-    {'title': 'Read a Book', 'isCompleted': false},
-    {'title': 'Plan Vacation', 'isCompleted': false},
-    {'title': 'Learn New Skill', 'isCompleted': false},
+    {'title': 'Fire Extnguisher', 'isCompleted': false, 'images': <String>[], 'icon': Icons.fire_extinguisher},
+    {'title': 'emergency exits', 'isCompleted': false, 'images': <String>[], 'icon': Icons.door_sliding},
+    {'title': 'Water supply', 'isCompleted': false, 'images': <String>[], 'icon': Icons.water_drop},
+    {'title': 'Restroom facilities', 'isCompleted': false, 'images': <String>[], 'icon': Icons.wc},
+    {'title': 'Merchandise displays', 'isCompleted': false, 'images': <String>[], 'icon': Icons.storefront},
+    {'title': 'Shelves', 'isCompleted': false, 'images': <String>[], 'icon': Icons.shelves},
+    {'title': 'Trash bins', 'isCompleted': false, 'images': <String>[], 'icon': Icons.delete},
+    {'title': 'Air conditioning', 'isCompleted': false, 'images': <String>[], 'icon': Icons.ac_unit},
+    {'title': 'CCTV', 'isCompleted': false, 'images': <String>[], 'icon': Icons.videocam},
+    {'title': 'Music and ambiance', 'isCompleted': false, 'images': <String>[], 'icon': Icons.music_note},
   ];
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(int index) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        checklistItems[index]['images'].add(image.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +68,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(24.0),
               decoration: const BoxDecoration(
-                color: Color(0xFFE8E8E8),
+                color: Color.fromARGB(255, 46, 4, 171),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
@@ -64,7 +79,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Color.fromARGB(221, 249, 248, 248),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -88,45 +103,222 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                         ),
                       ],
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 8.0,
-                      ),
-                      leading: Transform.scale(
-                        scale: 1.2,
-                        child: Checkbox(
-                          value: checklistItems[index]['isCompleted'],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              checklistItems[index]['isCompleted'] = value ?? false;
-                            });
-                          },
-                          activeColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Main row: number, checkbox, icon-title, camera
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Left: number and checkbox
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${index + 1}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Transform.scale(
+                                    scale: 1.2,
+                                    child: Checkbox(
+                                      value: checklistItems[index]['isCompleted'],
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          checklistItems[index]['isCompleted'] = value ?? false;
+                                        });
+                                      },
+                                      activeColor: Colors.blue,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 12),
+                              // Right: icon-title group and camera icon
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey.shade300),
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: Colors.grey.shade50,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              checklistItems[index]['icon'],
+                                              color: const Color.fromARGB(255, 168, 56, 56),
+                                              size: 28,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Flexible(
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  checklistItems[index]['title'],
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: checklistItems[index]['isCompleted']
+                                                        ? Colors.grey[600]
+                                                        : Colors.black87,
+                                                    decoration: checklistItems[index]['isCompleted']
+                                                        ? TextDecoration.lineThrough
+                                                        : TextDecoration.none,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IgnorePointer(
+                                      ignoring: checklistItems[index]['isCompleted'],
+                                      child: IconButton(
+                                        icon: Icon(Icons.camera_alt, color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.blue),
+                                        onPressed: checklistItems[index]['isCompleted']
+                                            ? null
+                                            : () => _pickImage(index),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                          // Images row: spans the full width
+                          if ((checklistItems[index]['images'] ?? []).isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0, left: 0),
+                              child: Row(
+                                children: [
+                                  ...((checklistItems[index]['images'] ?? []) as List)
+                                      .map<Widget>((imgPath) => Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                final images = (checklistItems[index]['images'] ?? []) as List;
+                                                int currentImg = images.indexOf(imgPath);
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) => StatefulBuilder(
+                                                    builder: (context, setStateDialog) => Dialog(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              IconButton(
+                                                                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  checklistItems[index]['title'],
+                                                                  style: const TextStyle(
+                                                                    fontSize: 18,
+                                                                    fontWeight: FontWeight.bold,
+                                                                  ),
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  textAlign: TextAlign.center,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Stack(
+                                                            alignment: Alignment.center,
+                                                            children: [
+                                                              Image.file(
+                                                                File(images[currentImg]),
+                                                                fit: BoxFit.contain,
+                                                              ),
+                                                              // Left arrow
+                                                              if (images.length > 1 && currentImg > 0)
+                                                                Positioned(
+                                                                  left: 8,
+                                                                  child: Opacity(
+                                                                    opacity: 0.5,
+                                                                    child: IconButton(
+                                                                      icon: const Icon(Icons.arrow_back, size: 40, color: Colors.black),
+                                                                      onPressed: () {
+                                                                        setStateDialog(() {
+                                                                          currentImg--;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              // Right arrow
+                                                              if (images.length > 1 && currentImg < images.length - 1)
+                                                                Positioned(
+                                                                  right: 8,
+                                                                  child: Opacity(
+                                                                    opacity: 0.5,
+                                                                    child: IconButton(
+                                                                      icon: const Icon(Icons.arrow_forward, size: 40, color: Colors.black),
+                                                                      onPressed: () {
+                                                                        setStateDialog(() {
+                                                                          currentImg++;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(height: 8),
+                                                          TextButton.icon(
+                                                            icon: const Icon(Icons.delete, color: Colors.red),
+                                                            label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                checklistItems[index]['images'].remove(images[currentImg]);
+                                                              });
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(4),
+                                                child: Image.file(
+                                                  File(imgPath),
+                                                  width: 32,
+                                                  height: 32,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
-                      title: Text(
-                        checklistItems[index]['title'],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: checklistItems[index]['isCompleted']
-                              ? Colors.grey[600]
-                              : Colors.black87,
-                          decoration: checklistItems[index]['isCompleted']
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          checklistItems[index]['isCompleted'] = 
-                              !checklistItems[index]['isCompleted'];
-                        });
-                      },
                     ),
                   );
                 },
@@ -139,7 +331,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Color.fromARGB(31, 168, 37, 37),
                     blurRadius: 8,
                     offset: Offset(0, -2),
                   ),
