@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const ChecklistApp());
@@ -12,11 +13,8 @@ class ChecklistApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Check list',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      title: 'CHECK LIST',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       home: const ChecklistScreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -33,18 +31,68 @@ class ChecklistScreen extends StatefulWidget {
 class _ChecklistScreenState extends State<ChecklistScreen> {
   // List of checklist items with their completion status
   List<Map<String, dynamic>> checklistItems = [
-    {'title': 'Fire Extnguisher', 'isCompleted': false, 'images': <String>[], 'icon': Icons.fire_extinguisher},
-    {'title': 'emergency exits', 'isCompleted': false, 'images': <String>[], 'icon': Icons.door_sliding},
-    {'title': 'Water supply', 'isCompleted': false, 'images': <String>[], 'icon': Icons.water_drop},
-    {'title': 'Restroom facilities', 'isCompleted': false, 'images': <String>[], 'icon': Icons.wc},
-    {'title': 'Merchandise displays', 'isCompleted': false, 'images': <String>[], 'icon': Icons.storefront},
-    {'title': 'Shelves', 'isCompleted': false, 'images': <String>[], 'icon': Icons.shelves},
-    {'title': 'Trash bins', 'isCompleted': false, 'images': <String>[], 'icon': Icons.delete},
-    {'title': 'Air conditioning', 'isCompleted': false, 'images': <String>[], 'icon': Icons.ac_unit},
-    {'title': 'CCTV', 'isCompleted': false, 'images': <String>[], 'icon': Icons.videocam},
-    {'title': 'Music and ambiance', 'isCompleted': false, 'images': <String>[], 'icon': Icons.music_note},
+    {
+      'title': 'Fire Extnguisher',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.fire_extinguisher,
+    },
+    {
+      'title': 'emergency exits',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.door_sliding,
+    },
+    {
+      'title': 'Water supply',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.water_drop,
+    },
+    {
+      'title': 'Restroom facilities',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.wc,
+    },
+    {
+      'title': 'Merchandise displays',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.storefront,
+    },
+    {
+      'title': 'Shelves',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.shelves,
+    },
+    {
+      'title': 'Trash bins',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.delete,
+    },
+    {
+      'title': 'Air conditioning',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.ac_unit,
+    },
+    {
+      'title': 'CCTV',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.videocam,
+    },
+    {
+      'title': 'Music and ambiance',
+      'isCompleted': false,
+      'images': <String>[],
+      'icon': Icons.music_note,
+    },
   ];
-
+  DateTime selectedDate = DateTime.now();
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(int index) async {
@@ -74,14 +122,90 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: const Text(
-                'Check list',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(221, 249, 248, 248),
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  const Text(
+                    'Check list',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(221, 249, 248, 248),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  // Date picker row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Previous day button
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_left,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedDate = selectedDate.subtract(
+                              const Duration(days: 1),
+                            );
+                          });
+                        },
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDate,
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              selectedDate = pickedDate;
+                            });
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_today,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              DateFormat(
+                                'EEE, MMM d, yyyy',
+                              ).format(selectedDate),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Next day button
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_right,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedDate = selectedDate.add(
+                              const Duration(days: 1),
+                            );
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             // Checklist Items
@@ -104,7 +228,10 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                       ],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 8.0,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -127,15 +254,19 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                   Transform.scale(
                                     scale: 1.2,
                                     child: Checkbox(
-                                      value: checklistItems[index]['isCompleted'],
+                                      value:
+                                          checklistItems[index]['isCompleted'],
                                       onChanged: (bool? value) {
                                         setState(() {
-                                          checklistItems[index]['isCompleted'] = value ?? false;
+                                          checklistItems[index]['isCompleted'] =
+                                              value ?? false;
                                         });
                                       },
                                       activeColor: Colors.blue,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4.0),
+                                        borderRadius: BorderRadius.circular(
+                                          4.0,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -148,10 +279,17 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey.shade300),
-                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                           color: Colors.grey.shade50,
                                         ),
                                         child: Row(
@@ -159,7 +297,12 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                           children: [
                                             Icon(
                                               checklistItems[index]['icon'],
-                                              color: const Color.fromARGB(255, 168, 56, 56),
+                                              color: const Color.fromARGB(
+                                                255,
+                                                168,
+                                                56,
+                                                56,
+                                              ),
                                               size: 28,
                                             ),
                                             const SizedBox(width: 8),
@@ -172,15 +315,19 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
-                                                    color: checklistItems[index]['isCompleted']
+                                                    color:
+                                                        checklistItems[index]['isCompleted']
                                                         ? Colors.grey[600]
                                                         : Colors.black87,
-                                                    decoration: checklistItems[index]['isCompleted']
-                                                        ? TextDecoration.lineThrough
+                                                    decoration:
+                                                        checklistItems[index]['isCompleted']
+                                                        ? TextDecoration
+                                                              .lineThrough
                                                         : TextDecoration.none,
                                                   ),
                                                   maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ),
@@ -190,10 +337,18 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     IgnorePointer(
-                                      ignoring: checklistItems[index]['isCompleted'],
+                                      ignoring:
+                                          checklistItems[index]['isCompleted'],
                                       child: IconButton(
-                                        icon: Icon(Icons.camera_alt, color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.blue),
-                                        onPressed: checklistItems[index]['isCompleted']
+                                        icon: Icon(
+                                          Icons.camera_alt,
+                                          color:
+                                              checklistItems[index]['isCompleted']
+                                              ? Colors.grey
+                                              : Colors.blue,
+                                        ),
+                                        onPressed:
+                                            checklistItems[index]['isCompleted']
                                             ? null
                                             : () => _pickImage(index),
                                       ),
@@ -204,116 +359,176 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                             ],
                           ),
                           // Images row: spans the full width
-                          if ((checklistItems[index]['images'] ?? []).isNotEmpty)
+                          if ((checklistItems[index]['images'] ?? [])
+                              .isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0, left: 0),
                               child: Row(
                                 children: [
-                                  ...((checklistItems[index]['images'] ?? []) as List)
-                                      .map<Widget>((imgPath) => Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                final images = (checklistItems[index]['images'] ?? []) as List;
-                                                int currentImg = images.indexOf(imgPath);
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (_) => StatefulBuilder(
-                                                    builder: (context, setStateDialog) => Dialog(
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              IconButton(
-                                                                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                                  ...((checklistItems[index]['images'] ?? []) as List).map<
+                                    Widget
+                                  >(
+                                    (imgPath) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          final images =
+                                              (checklistItems[index]['images'] ??
+                                                      [])
+                                                  as List;
+                                          int currentImg = images.indexOf(
+                                            imgPath,
+                                          );
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => StatefulBuilder(
+                                              builder: (context, setStateDialog) => Dialog(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                            Icons.arrow_back,
+                                                            color: Colors.black,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                          },
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
+                                                            checklistItems[index]['title'],
+                                                            style:
+                                                                const TextStyle(
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Stack(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      children: [
+                                                        Image.file(
+                                                          File(
+                                                            images[currentImg],
+                                                          ),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                        // Left arrow
+                                                        if (images.length > 1 &&
+                                                            currentImg > 0)
+                                                          Positioned(
+                                                            left: 8,
+                                                            child: Opacity(
+                                                              opacity: 0.5,
+                                                              child: IconButton(
+                                                                icon: const Icon(
+                                                                  Icons
+                                                                      .arrow_back,
+                                                                  size: 40,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
                                                                 onPressed: () {
-                                                                  Navigator.of(context).pop();
+                                                                  setStateDialog(
+                                                                    () {
+                                                                      currentImg--;
+                                                                    },
+                                                                  );
                                                                 },
                                                               ),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  checklistItems[index]['title'],
-                                                                  style: const TextStyle(
-                                                                    fontSize: 18,
-                                                                    fontWeight: FontWeight.bold,
-                                                                  ),
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                  textAlign: TextAlign.center,
+                                                            ),
+                                                          ),
+                                                        // Right arrow
+                                                        if (images.length > 1 &&
+                                                            currentImg <
+                                                                images.length -
+                                                                    1)
+                                                          Positioned(
+                                                            right: 8,
+                                                            child: Opacity(
+                                                              opacity: 0.5,
+                                                              child: IconButton(
+                                                                icon: const Icon(
+                                                                  Icons
+                                                                      .arrow_forward,
+                                                                  size: 40,
+                                                                  color: Colors
+                                                                      .black,
                                                                 ),
+                                                                onPressed: () {
+                                                                  setStateDialog(
+                                                                    () {
+                                                                      currentImg++;
+                                                                    },
+                                                                  );
+                                                                },
                                                               ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                          Stack(
-                                                            alignment: Alignment.center,
-                                                            children: [
-                                                              Image.file(
-                                                                File(images[currentImg]),
-                                                                fit: BoxFit.contain,
-                                                              ),
-                                                              // Left arrow
-                                                              if (images.length > 1 && currentImg > 0)
-                                                                Positioned(
-                                                                  left: 8,
-                                                                  child: Opacity(
-                                                                    opacity: 0.5,
-                                                                    child: IconButton(
-                                                                      icon: const Icon(Icons.arrow_back, size: 40, color: Colors.black),
-                                                                      onPressed: () {
-                                                                        setStateDialog(() {
-                                                                          currentImg--;
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              // Right arrow
-                                                              if (images.length > 1 && currentImg < images.length - 1)
-                                                                Positioned(
-                                                                  right: 8,
-                                                                  child: Opacity(
-                                                                    opacity: 0.5,
-                                                                    child: IconButton(
-                                                                      icon: const Icon(Icons.arrow_forward, size: 40, color: Colors.black),
-                                                                      onPressed: () {
-                                                                        setStateDialog(() {
-                                                                          currentImg++;
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                            ],
-                                                          ),
-                                                          const SizedBox(height: 8),
-                                                          TextButton.icon(
-                                                            icon: const Icon(Icons.delete, color: Colors.red),
-                                                            label: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                checklistItems[index]['images'].remove(images[currentImg]);
-                                                              });
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                );
-                                              },
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(4),
-                                                child: Image.file(
-                                                  File(imgPath),
-                                                  width: 32,
-                                                  height: 32,
-                                                  fit: BoxFit.cover,
+                                                    const SizedBox(height: 8),
+                                                    TextButton.icon(
+                                                      icon: const Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      ),
+                                                      label: const Text(
+                                                        'Delete',
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          checklistItems[index]['images']
+                                                              .remove(
+                                                                images[currentImg],
+                                                              );
+                                                        });
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop();
+                                                      },
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                          ))
-                                      .toList(),
+                                          );
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          child: Image.file(
+                                            File(imgPath),
+                                            width: 32,
+                                            height: 32,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -341,7 +556,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildBottomNavItem(Icons.home, 'Home', true),
-                  _buildBottomNavItem(Icons.info_outline, 'About', false),
+                  _buildBottomNavItem(Icons.settings, 'Settings', false),
                 ],
               ),
             ),
@@ -355,11 +570,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 24,
-          color: isActive ? Colors.blue : Colors.grey[600],
-        ),
+        Icon(icon, size: 24, color: isActive ? Colors.blue : Colors.grey[600]),
         const SizedBox(height: 4),
         Text(
           label,
