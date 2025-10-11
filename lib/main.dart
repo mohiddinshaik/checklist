@@ -35,60 +35,70 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
       'title': 'Fire Extnguisher',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.fire_extinguisher,
     },
     {
       'title': 'emergency exits',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.door_sliding,
     },
     {
       'title': 'Water supply',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.water_drop,
     },
     {
       'title': 'Restroom facilities',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.wc,
     },
     {
       'title': 'Merchandise displays',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.storefront,
     },
     {
       'title': 'Shelves',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.shelves,
     },
     {
       'title': 'Trash bins',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.delete,
     },
     {
       'title': 'Air conditioning',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.ac_unit,
     },
     {
       'title': 'CCTV',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.videocam,
     },
     {
       'title': 'Music and ambiance',
       'isCompleted': false,
       'images': <String>[],
+     'comments': '',
       'icon': Icons.music_note,
     },
   ];
@@ -104,6 +114,45 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
     }
   }
 
+  void _showCommentDialog(int index) {
+  TextEditingController controller = TextEditingController(
+    text: checklistItems[index]['comments'] ?? '',
+  );
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Add Comment'),
+        content: TextField(
+          controller: controller,
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'Enter your comment...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Discard
+            },
+            child: const Text('Discard'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                checklistItems[index]['comments'] = controller.text;
+              });
+              Navigator.of(context).pop(); // Save
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,10 +166,6 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
               padding: const EdgeInsets.all(24.0),
               decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 46, 4, 171),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
               ),
               child: Column(
                 children: [
@@ -336,23 +381,30 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    IgnorePointer(
-                                      ignoring:
-                                          checklistItems[index]['isCompleted'],
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.camera_alt,
-                                          color:
-                                              checklistItems[index]['isCompleted']
-                                              ? Colors.grey
-                                              : Colors.blue,
-                                        ),
-                                        onPressed:
-                                            checklistItems[index]['isCompleted']
-                                            ? null
-                                            : () => _pickImage(index),
-                                      ),
-                                    ),
+                                 IgnorePointer(
+  ignoring: checklistItems[index]['isCompleted'],
+  child: IconButton(
+    icon: Icon(
+      Icons.camera_alt,
+      color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.blue,
+    ),
+    onPressed: checklistItems[index]['isCompleted']
+        ? null
+        : () => _pickImage(index),
+  ),
+),
+const SizedBox(width: 4),
+IconButton(
+  icon: Icon(
+    Icons.chat,
+    color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.deepPurple,
+  ),
+  onPressed: checklistItems[index]['isCompleted']
+      ? null
+      : () {
+          _showCommentDialog(index);
+        },
+),
                                   ],
                                 ),
                               ),
@@ -512,7 +564,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                                   ],
                                                 ),
                                               ),
-                                            ),
+                                            )
                                           );
                                         },
                                         child: ClipRRect(
@@ -530,6 +582,23 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                          // Comments section
+                          if ((checklistItems[index]['comments'] ?? '').isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0, left: 0),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  checklistItems[index]['comments'],
+                                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                                ),
                               ),
                             ),
                         ],
