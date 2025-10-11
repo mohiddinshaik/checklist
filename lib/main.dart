@@ -14,7 +14,7 @@ class ChecklistApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CHECK LIST',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
       home: const ChecklistScreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -617,6 +617,7 @@ IconButton(
                   _buildBottomNavItem(Icons.home, 'Home', true),
                   _buildBottomNavItem(Icons.settings, 'Settings', false),
                 ],
+                
               ),
             ),
           ],
@@ -629,13 +630,13 @@ IconButton(
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 24, color: isActive ? Colors.blue : Colors.grey[600]),
+        Icon(icon, size: 24, color: isActive ? Colors.deepPurple : Colors.grey[600]),
         const SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
             fontSize: 12,
-            color: isActive ? Colors.blue : Colors.grey[600],
+            color: isActive ? Colors.deepPurple : Colors.grey[600],
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
