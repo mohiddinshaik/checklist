@@ -260,23 +260,20 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 itemCount: checklistItems.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 12.0),
+                       margin: const EdgeInsets.only(bottom: 14.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(16.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                         color: Colors.grey.shade200,
+          blurRadius: 6, offset: const Offset(0, 2),
                         ),
                       ],
                     ),
+     
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 8.0,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 12.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -290,10 +287,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                 children: [
                                   Text(
                                     '${index + 1}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(width: 8),
                                   Transform.scale(
@@ -307,13 +301,13 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                               value ?? false;
                                         });
                                       },
-                                      activeColor: Colors.blue,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          4.0,
+                                      side: BorderSide(
+                                          color: Colors.grey.shade600,
+                                          width: 2,
                                         ),
-                                      ),
-                                    ),
+                                      shape: const CircleBorder(),
+                                    
+                                  )
                                   ),
                                 ],
                               ),
@@ -324,31 +318,27 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.grey.shade300,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          color: Colors.grey.shade50,
-                                        ),
+                                         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecoration(
+            color:Color(0xFFD6E9FA),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromARGB(255, 194, 203, 255),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+                                        
+            
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Icon(
                                               checklistItems[index]['icon'],
-                                              color: const Color.fromARGB(
-                                                255,
-                                                168,
-                                                56,
-                                                56,
-                                              ),
-                                              size: 28,
+                                              color: Color.fromARGB(255, 39, 43, 68),
+                                              size: 20,
                                             ),
                                             const SizedBox(width: 8),
                                             Flexible(
@@ -358,7 +348,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                                 child: Text(
                                                   checklistItems[index]['title'],
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                     fontWeight: FontWeight.w500,
                                                     color:
                                                         checklistItems[index]['isCompleted']
@@ -386,7 +376,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
   child: IconButton(
     icon: Icon(
       Icons.camera_alt,
-      color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.blue,
+      color: checklistItems[index]['isCompleted'] ? Colors.grey : Colors.deepPurple,
     ),
     onPressed: checklistItems[index]['isCompleted']
         ? null
